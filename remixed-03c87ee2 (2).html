@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Control Baño · IES San Antonio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#f4f4f5;--surface:#ffffff;--ink:#18181b;--ink2:#71717a;
+    --accent:#16a34a;--accent-light:#dcfce7;
+    --warn:#f59e0b;--warn-light:#fef3c7;
+    --danger:#dc2626;--danger-light:#fee2e2;
+    --border:#e4e4e7;--radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100dvh;}
+
+  /* LOGIN */
+  .login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;padding:32px 24px;gap:20px;}
+  .login-icon{font-size:3.5rem;}
+  .login-title{font-size:1.4rem;font-weight:700;text-align:center;}
+  .login-sub{font-size:.9rem;color:var(--ink2);text-align:center;}
+  .login-box{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:24px 20px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:14px;}
+  .login-box label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--ink2);}
+  .pass-wrap{position:relative;}
+  .pass-wrap input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:13px 44px 13px 14px;font-family:'DM Sans',sans-serif;font-size:1rem;color:var(--ink);outline:none;}
+  .pass-wrap input:focus{border-color:var(--accent);}
+  .pass-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--ink2);padding:4px;}
+  .btn-login{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:14px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;}
+  .btn-login:active{transform:scale(.97);}
+  .login-err{background:var(--danger-light);color:var(--danger);border-radius:8px;padding:10px 14px;font-size:.85rem;font-weight:600;text-align:center;display:none;}
+  .login-err.vis{display:block;}
+
+  /* APP */
+  .app-screen{display:none;}
+  .app-screen.vis{display:block;}
+
+  .header{background:var(--accent);color:#fff;padding:14px 16px 12px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+  .header-title{font-size:1.05rem;font-weight:700;}
+  .header-right{text-align:right;}
+  .header-time{font-size:.78rem;opacity:.9;font-weight:500;line-height:1.4;}
+  .sync-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;margin-right:4px;opacity:.5;transition:opacity .3s,background .3s;}
+  .sync-dot.syncing{opacity:1;background:#fde047;animation:blink .6s infinite;}
+  .sync-dot.ok{opacity:1;background:#86efac;animation:none;}
+  .sync-dot.err{opacity:1;background:#fca5a5;animation:none;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+  .sync-label{font-size:.68rem;opacity:.85;}
+  .btn-logout{background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:7px;padding:5px 10px;font-size:.75rem;font-weight:700;cursor:pointer;margin-top:4px;}
+
+  .section{padding:12px 14px 0;}
+  .section-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--ink2);margin-bottom:7px;padding-left:2px;}
+  .field{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:13px 14px;font-family:'DM Sans',sans-serif;font-size:1rem;color:var(--ink);width:100%;appearance:none;-webkit-appearance:none;outline:none;}
+  .field:focus{border-color:var(--accent);}
+  .select-wrap{position:relative;}
+  .select-wrap::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--ink2);pointer-events:none;}
+
+  .horas-scroll{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none;}
+  .horas-scroll::-webkit-scrollbar{display:none;}
+  .hora-chip{flex-shrink:0;background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:10px 14px;cursor:pointer;transition:all .15s;text-align:center;min-width:80px;position:relative;}
+  .hora-chip.activa{border-color:var(--accent);background:var(--accent-light);}
+  .hora-chip.recreo{background:var(--warn-light);border-color:var(--warn);opacity:.8;pointer-events:none;}
+  .hora-chip .chip-num{font-size:.75rem;font-weight:700;color:var(--accent);}
+  .hora-chip.recreo .chip-num{color:var(--warn);}
+  .hora-chip .chip-rango{font-size:.65rem;color:var(--ink2);margin-top:2px;}
+  .hora-chip .chip-badge{position:absolute;top:-6px;right:-6px;background:var(--danger);color:#fff;border-radius:99px;font-size:.65rem;font-weight:700;padding:2px 6px;display:none;border:2px solid var(--bg);}
+  .hora-chip .chip-badge.vis{display:block;}
+
+  .add-row{display:flex;gap:8px;align-items:center;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:8px 8px 8px 14px;}
+  .add-row input{flex:1;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--ink);background:transparent;min-width:0;}
+  .add-row input::placeholder{color:var(--ink2);}
+  .btn-add{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:11px 16px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+  .btn-add:active{transform:scale(.96);}
+
+  .cards-list{display:flex;flex-direction:column;gap:10px;}
+  .alumno-card{background:var(--surface);border-radius:var(--radius);padding:14px;border:1.5px solid var(--border);}
+  .alumno-card.activo{border-color:var(--warn);background:#fffbeb;}
+  .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px;}
+  .card-name{font-weight:700;font-size:1rem;line-height:1.2;}
+  .card-idx{font-size:.75rem;color:var(--ink2);font-weight:500;margin-top:1px;}
+  .card-estado{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:4px 10px;font-size:.75rem;font-weight:700;flex-shrink:0;}
+  .estado-fuera{background:var(--warn-light);color:#92400e;}
+  .estado-ok{background:var(--accent-light);color:#166534;}
+  .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+  .dot-warn{background:var(--warn);animation:pulse 1.2s infinite;}
+  .dot-ok{background:var(--accent);}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+  .card-times{display:flex;gap:12px;margin-bottom:10px;font-size:.8rem;color:var(--ink2);flex-wrap:wrap;}
+  .card-times strong{color:var(--ink);font-weight:600;}
+  .card-dur{font-size:.8rem;font-weight:700;margin-bottom:10px;}
+  .card-dur.larga{color:var(--danger);}
+  .card-actions{display:flex;gap:8px;}
+  .btn-card{flex:1;border:none;border-radius:9px;padding:11px 10px;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;}
+  .btn-card:active{transform:scale(.96);}
+  .btn-vuelto{background:var(--accent);color:#fff;}
+  .btn-del{background:var(--danger-light);color:var(--danger);flex:0 0 auto;min-width:44px;}
+
+  .empty{text-align:center;padding:40px 20px;color:var(--ink2);}
+  .empty .icon{font-size:2.8rem;margin-bottom:10px;}
+  .empty p{font-size:.9rem;line-height:1.5;}
+
+  .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;}
+  .stat-box{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:10px 6px;text-align:center;}
+  .stat-val{font-size:1.4rem;font-weight:700;color:var(--accent);line-height:1;}
+  .stat-lbl{font-size:.62rem;color:var(--ink2);font-weight:600;margin-top:3px;text-transform:uppercase;letter-spacing:.4px;}
+
+  .bottom-bar{position:sticky;bottom:0;z-index:40;background:var(--surface);border-top:1px solid var(--border);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:flex;gap:8px;}
+  .btn-bar{flex:1;border:none;border-radius:12px;padding:13px 10px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;}
+  .btn-bar:active{transform:scale(.97);}
+  .btn-bar-outline{background:var(--bg);color:var(--ink);border:1.5px solid var(--border);}
+  .btn-bar-green{background:var(--accent);color:#fff;}
+
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-end;justify-content:center;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--surface);border-radius:20px 20px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));width:100%;max-height:75dvh;display:flex;flex-direction:column;gap:12px;}
+  .modal-handle{width:40px;height:4px;background:var(--border);border-radius:99px;margin:0 auto 4px;}
+  .modal h3{font-size:1.05rem;font-weight:700;}
+  .modal pre{background:#18181b;color:#e4e4e7;border-radius:10px;padding:14px;font-size:.75rem;overflow:auto;flex:1;white-space:pre-wrap;line-height:1.6;}
+  .modal-btns{display:flex;gap:8px;}
+  .modal-btns button{flex:1;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;}
+  .btn-copy{background:var(--accent);color:#fff;}
+  .btn-close-m{background:var(--bg);color:var(--ink);}
+
+  .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#18181b;color:#fff;border-radius:10px;padding:10px 18px;font-size:.85rem;font-weight:600;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
+  .toast.show{opacity:1;}
+  .spacer{height:80px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-icon">🚻</div>
+  <div class="login-title">Control de Baño<br>IES San Antonio</div>
+  <div class="login-sub">Introduce la contraseña del centro para acceder</div>
+  <div class="login-box">
+    <label>Contraseña</label>
+    <div class="pass-wrap">
+      <input type="password" id="inp-pass" placeholder="Contraseña" onkeydown="if(event.key==='Enter')intentarLogin()">
+      <button class="pass-toggle" onclick="togglePass()">👁</button>
+    </div>
+    <div class="login-err" id="login-err">Contraseña incorrecta.</div>
+    <button class="btn-login" onclick="intentarLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app-screen" id="app-screen">
+  <div class="header">
+    <div class="header-title">🚻 Control de Baño</div>
+    <div class="header-right">
+      <div class="header-time">
+        <div id="fecha-hoy"></div>
+        <div id="reloj-live" style="font-size:.9rem;font-weight:700"></div>
+      </div>
+      <div style="margin-top:4px;display:flex;align-items:center;justify-content:flex-end;gap:8px;">
+        <span><span class="sync-dot" id="sync-dot"></span><span class="sync-label" id="sync-label">Listo</span></span>
+        <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:14px">
+    <div class="section-label">Curso</div>
+    <div class="select-wrap">
+      <select class="field" id="sel-curso">
+        <option value="">— Selecciona curso —</option>
+        <optgroup label="1.º ESO"><option>1.º ESO A</option><option>1.º ESO B</option><option>1.º ESO C</option><option>1.º ESO D</option></optgroup>
+        <optgroup label="2.º ESO"><option>2.º ESO A</option><option>2.º ESO B</option><option>2.º ESO C</option><option>2.º ESO D</option></optgroup>
+        <optgroup label="3.º ESO"><option>3.º ESO A</option><option>3.º ESO B</option><option>3.º ESO C</option><option>3.º ESO D</option></optgroup>
+        <optgroup label="4.º ESO"><option>4.º ESO A</option><option>4.º ESO B</option><option>4.º ESO C</option><option>4.º ESO D</option></optgroup>
+      </select>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Hora lectiva</div>
+    <div class="horas-scroll" id="horas-scroll"></div>
+  </div>
+
+  <div class="section" id="add-section" style="display:none">
+    <div class="section-label">Registrar salida</div>
+    <div class="add-row">
+      <input type="text" id="inp-alumno" placeholder="Nombre del alumno/a" autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')registrarSalida()">
+      <button class="btn-add" onclick="registrarSalida()">➕ Registrar</button>
+    </div>
+  </div>
+
+  <div class="section" id="stats-section" style="display:none">
+    <div class="stats-bar">
+      <div class="stat-box"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">Total</div></div>
+      <div class="stat-box"><div class="stat-val" id="st-fuera" style="color:var(--warn)">0</div><div class="stat-lbl">Fuera</div></div>
+      <div class="stat-box"><div class="stat-val" id="st-media">—</div><div class="stat-lbl">Media</div></div>
+      <div class="stat-box"><div class="stat-val" id="st-max">—</div><div class="stat-lbl">Máx</div></div>
+    </div>
+  </div>
+
+  <div class="section" style="padding-bottom:0;margin-bottom:10px">
+    <div id="cards-wrap">
+      <div class="empty"><div class="icon">🚪</div><p>Selecciona un curso y una hora lectiva.</p></div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="bottom-bar">
+    <button class="btn-bar btn-bar-outline" onclick="abrirResumen()">📋 Resumen</button>
+    <button class="btn-bar btn-bar-outline" onclick="forzarSync()">🔄 Actualizar</button>
+    <button class="btn-bar btn-bar-green" onclick="exportarExcel()">📥 Excel</button>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3>📋 Resumen del día</h3>
+    <pre id="modal-content"></pre>
+    <div class="modal-btns">
+      <button class="btn-close-m" onclick="cerrarModal()">Cerrar</button>
+      <button class="btn-copy" onclick="copiarResumen()">📄 Copiar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+// ── CONTRASEÑA ───────────────────────────────────────
+const PASSWORD = '0000';
+const STORAGE_KEY = 'ies_bano_registros';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwL8J3GHIZxlq8-IqKXsnE7kkZlFR98Usfr8mayHe6RpjH9voynBFlDmwOJO2JC5Jqa/exec';
+
+const HORAS = [
+  {label:'1ª',rango:'08:30-09:30'},
+  {label:'2ª',rango:'09:30-10:30'},
+  {label:'3ª',rango:'10:30-11:30'},
+  {label:'🧃',rango:'Recreo',recreo:true},
+  {label:'4ª',rango:'12:00-13:00'},
+  {label:'5ª',rango:'13:00-14:00'},
+  {label:'6ª',rango:'14:00-15:00'},
+];
+
+let registros = {};
+HORAS.forEach((_,i) => registros[i] = {});
+let horaActual = null;
+let timerRender = null;
+
+// ── LOGIN ────────────────────────────────────────────
+function togglePass() {
+  const inp = document.getElementById('inp-pass');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+function intentarLogin() {
+  const pass = document.getElementById('inp-pass').value.trim();
+  if (pass === PASSWORD) {
+    document.getElementById('login-err').classList.remove('vis');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-screen').classList.add('vis');
+    iniciarApp();
+  } else {
+    document.getElementById('login-err').classList.add('vis');
+  }
+}
+
+function cerrarSesion() {
+  horaActual = null;
+  document.getElementById('app-screen').classList.remove('vis');
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('inp-pass').value = '';
+}
+
+// ── INICIO ───────────────────────────────────────────
+async function iniciarApp() {
+  document.getElementById('fecha-hoy').textContent =
+    new Date().toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
+  tick();
+  await cargarDatos();
+  setInterval(() => cargarDatos(true), 20000);
+}
+
+// ── RELOJ ────────────────────────────────────────────
+function tick() {
+  document.getElementById('reloj-live').textContent =
+    new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+setInterval(tick, 1000);
+
+// ── SYNC STATE ───────────────────────────────────────
+function setSyncState(state, txt) {
+  const dot = document.getElementById('sync-dot');
+  const lbl = document.getElementById('sync-label');
+  if (!dot) return;
+  dot.className = 'sync-dot ' + state;
+  lbl.textContent = txt;
+}
+
+// ── STORAGE ──────────────────────────────────────────
+async function cargarDatos(silencioso = false) {
+  if (!silencioso) setSyncState('syncing', 'Cargando…');
+  try {
+    const res = await fetch(`${SCRIPT_URL}?pass=${encodeURIComponent(PASSWORD)}&t=${Date.now()}`);
+    const data = await res.json();
+    if (data.error) { setSyncState('err', 'Sin acceso'); return; }
+    registros = deserializar(data.rows);
+    setSyncState('ok', 'Sincronizado ✓');
+    badges(); render();
+  } catch(e) {
+    setSyncState('err', 'Sin conexión');
+    if (!silencioso) mostrarToast('⚠️ No se pudo cargar.');
+  }
+}
+
+async function guardarDatos() {
+  setSyncState('syncing', 'Guardando…');
+  try {
+    const rows = serializar();
+    const data = encodeURIComponent(JSON.stringify(rows));
+    const url = `${SCRIPT_URL}?pass=${encodeURIComponent(PASSWORD)}&action=write&data=${data}`;
+    const res = await fetch(url);
+    const json = await res.json();
+    if (json.ok) setSyncState('ok', 'Guardado ✓');
+    else { setSyncState('err', 'Error al guardar'); mostrarToast('⚠️ No se pudo guardar.'); }
+  } catch(e) {
+    setSyncState('err', 'Error al guardar');
+    mostrarToast('⚠️ No se pudo guardar.');
+  }
+}
+
+function serializar() {
+  const rows = [['horaIdx','curso','alumno','salida','regreso']];
+  HORAS.forEach((_,i) => {
+    Object.keys(registros[i]).forEach(c => {
+      (registros[i][c]||[]).forEach(r => {
+        rows.push([i, c, r.alumno, r.salida.toISOString(), r.regreso ? r.regreso.toISOString() : '']);
+      });
+    });
+  });
+  return rows;
+}
+
+function deserializar(rows) {
+  const n = {};
+  HORAS.forEach((_,i) => n[i] = {});
+  if (!rows || rows.length <= 1) return n;
+  for (let i = 1; i < rows.length; i++) {
+    const [hi,c,alumno,salida,regreso] = rows[i].map(String);
+    if (!hi||!c||!alumno||!salida) continue;
+    const idx = parseInt(hi);
+    if (isNaN(idx)||idx<0||idx>=HORAS.length) continue;
+    if (!n[idx][c]) n[idx][c] = [];
+    n[idx][c].push({alumno, salida:new Date(salida), regreso:regreso?new Date(regreso):null});
+  }
+  return n;
+}
+
+function forzarSync() {
+  mostrarToast('🔄 Actualizando…');
+  cargarDatos(false);
+}
+
+// ── HORAS ────────────────────────────────────────────
+const scroll = document.getElementById('horas-scroll');
+HORAS.forEach((h,i) => {
+  const d = document.createElement('div');
+  d.className = 'hora-chip'+(h.recreo?' recreo':'');
+  d.id = `hc-${i}`;
+  d.innerHTML = `<div class="chip-num">${h.label}</div><div class="chip-rango">${h.rango}</div><span class="chip-badge" id="b-${i}">0</span>`;
+  if (!h.recreo) d.onclick = () => selHora(i);
+  scroll.appendChild(d);
+});
+
+function selHora(i) {
+  horaActual = i;
+  document.querySelectorAll('.hora-chip').forEach(c => c.classList.remove('activa'));
+  document.getElementById(`hc-${i}`).classList.add('activa');
+  render();
+}
+
+document.getElementById('sel-curso').addEventListener('change', render);
+
+// ── REGISTRAR ────────────────────────────────────────
+function registrarSalida() {
+  const curso = document.getElementById('sel-curso').value;
+  const nombre = document.getElementById('inp-alumno').value.trim();
+  if (!curso) { mostrarToast('⚠️ Selecciona un curso.'); return; }
+  if (!nombre) { mostrarToast('⚠️ Escribe el nombre del alumno/a.'); return; }
+  if (horaActual === null) { mostrarToast('⚠️ Selecciona una hora lectiva.'); return; }
+  if (!registros[horaActual][curso]) registros[horaActual][curso] = [];
+  registros[horaActual][curso].push({alumno: nombre, salida: new Date(), regreso: null});
+  document.getElementById('inp-alumno').value = '';
+  document.getElementById('inp-alumno').focus();
+  render(); badges(); guardarDatos();
+  mostrarToast('✅ Salida registrada');
+}
+
+function regresarAlumno(idx) {
+  const curso = document.getElementById('sel-curso').value;
+  registros[horaActual][curso][idx].regreso = new Date();
+  render(); badges(); guardarDatos();
+  mostrarToast('✅ Regreso registrado');
+}
+
+function borrarAlumno(idx) {
+  const curso = document.getElementById('sel-curso').value;
+  if (confirm('¿Eliminar este registro?')) {
+    registros[horaActual][curso].splice(idx, 1);
+    render(); badges(); guardarDatos();
+  }
+}
+
+// ── RENDER ───────────────────────────────────────────
+function render() {
+  clearTimeout(timerRender);
+  const curso = document.getElementById('sel-curso').value;
+  const wrap = document.getElementById('cards-wrap');
+  const addSec = document.getElementById('add-section');
+  const statsSec = document.getElementById('stats-section');
+
+  if (horaActual === null || !curso) {
+    addSec.style.display = 'none'; statsSec.style.display = 'none';
+    wrap.innerHTML = `<div class="empty"><div class="icon">🚪</div><p>${horaActual === null ? 'Selecciona una hora lectiva.' : 'Selecciona un curso.'}</p></div>`;
+    return;
+  }
+  addSec.style.display = 'block';
+  const lista = registros[horaActual][curso] || [];
+  if (!lista.length) {
+    statsSec.style.display = 'none';
+    wrap.innerHTML = `<div class="empty"><div class="icon">✅</div><p>Sin salidas en ${HORAS[horaActual].label} hora — ${curso}.</p></div>`;
+    return;
+  }
+  statsSec.style.display = 'block';
+  const now = new Date(); let fuera = 0; const durs = [];
+  const cards = lista.map((r,idx) => {
+    const fin = r.regreso || now;
+    const dur = Math.floor((fin - r.salida) / 60000);
+    const activo = !r.regreso;
+    if (activo) fuera++; else durs.push(dur);
+    return `<div class="alumno-card${activo?' activo':''}">
+      <div class="card-top">
+        <div><div class="card-name">${esc(r.alumno)}</div><div class="card-idx">#${idx+1} · ${HORAS[horaActual].label} · ${curso}</div></div>
+        <span class="card-estado ${activo?'estado-fuera':'estado-ok'}"><span class="dot ${activo?'dot-warn':'dot-ok'}"></span>${activo?'Fuera':'Vuelto'}</span>
+      </div>
+      <div class="card-times"><span>🚶 Salida: <strong>${fmtHora(r.salida)}</strong></span>${r.regreso?`<span>🏫 Regreso: <strong>${fmtHora(r.regreso)}</strong></span>`:''}</div>
+      <div class="card-dur${dur>=10?' larga':''}" style="margin-bottom:10px">⏱ ${dur} min${activo?' (en curso)':''}</div>
+      <div class="card-actions">
+        ${activo?`<button class="btn-card btn-vuelto" onclick="regresarAlumno(${idx})">✅ Ha vuelto</button>`:'<div style="flex:1"></div>'}
+        <button class="btn-card btn-del" onclick="borrarAlumno(${idx})">🗑</button>
+      </div></div>`;
+  }).join('');
+  wrap.innerHTML = `<div class="cards-list">${cards}</div>`;
+  document.getElementById('st-total').textContent = lista.length;
+  document.getElementById('st-fuera').textContent = fuera;
+  if (durs.length) {
+    document.getElementById('st-media').textContent = Math.round(durs.reduce((a,b)=>a+b,0)/durs.length);
+    document.getElementById('st-max').textContent = Math.max(...durs);
+  } else {
+    document.getElementById('st-media').textContent = '—';
+    document.getElementById('st-max').textContent = '—';
+  }
+  if (fuera > 0) timerRender = setTimeout(render, 30000);
+}
+
+function badges() {
+  HORAS.forEach((_,i) => {
+    let n = 0; Object.values(registros[i]).forEach(arr => n += arr.length);
+    const b = document.getElementById(`b-${i}`);
+    b.textContent = n; b.classList.toggle('vis', n > 0);
+  });
+}
+
+// ── RESUMEN ──────────────────────────────────────────
+function abrirResumen() {
+  const fecha = new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const lineas = [`CONTROL DE BAÑO · ${fecha.toUpperCase()}`, '─'.repeat(42)];
+  let hay = false;
+  HORAS.forEach((h,i) => {
+    const cursos = Object.keys(registros[i]).filter(c => registros[i][c].length > 0);
+    if (!cursos.length) return; hay = true;
+    lineas.push(`\n▸ ${h.label} (${h.rango})`);
+    cursos.forEach(c => {
+      lineas.push(`  📚 ${c}`);
+      registros[i][c].forEach((r,idx) => {
+        const dur = r.regreso ? Math.floor((r.regreso-r.salida)/60000)+'min' : 'fuera';
+        lineas.push(`  ${idx+1}. ${r.alumno}  |  ${fmtHora(r.salida)} → ${r.regreso?fmtHora(r.regreso):'?'}  (${dur})`);
+      });
+    });
+  });
+  if (!hay) lineas.push('\n(Sin registros)');
+  document.getElementById('modal-content').textContent = lineas.join('\n');
+  document.getElementById('modal').classList.add('open');
+}
+function cerrarModal() { document.getElementById('modal').classList.remove('open'); }
+function copiarResumen() {
+  navigator.clipboard.writeText(document.getElementById('modal-content').textContent)
+    .then(() => mostrarToast('📄 Copiado al portapapeles'))
+    .catch(() => mostrarToast('No se pudo copiar'));
+}
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) cerrarModal();
+});
+
+// ── UTILS ────────────────────────────────────────────
+function mostrarToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+function exportarExcel() {
+  if (typeof XLSX === 'undefined') { mostrarToast('⚠️ Cargando librería…'); return; }
+  const fecha = new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const wb = XLSX.utils.book_new();
+  const rows = [['Fecha','Hora','Franja','Curso','Alumno/a','Salida','Regreso','Duración (min)','Estado']];
+  HORAS.forEach((h,i) => {
+    if (h.recreo) return;
+    Object.keys(registros[i]).forEach(c => {
+      (registros[i][c]||[]).forEach(r => {
+        const fin = r.regreso || new Date();
+        const dur = Math.floor((fin - r.salida) / 60000);
+        rows.push([fecha, h.label, h.rango, c, r.alumno, fmtHora(r.salida), r.regreso ? fmtHora(r.regreso) : 'Fuera', dur, r.regreso ? 'Vuelto' : 'Fuera']);
+      });
+    });
+  });
+  if (rows.length === 1) { mostrarToast('⚠️ No hay datos para exportar.'); return; }
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{wch:12},{wch:6},{wch:14},{wch:14},{wch:24},{wch:12},{wch:12},{wch:16},{wch:10}];
+  XLSX.utils.book_append_sheet(wb, ws, 'Registros');
+  XLSX.writeFile(wb, `Control_Bano_${fecha.replace(/\//g,'-')}.xlsx`);
+  mostrarToast('📥 Excel descargado');
+}
+
+function fmtHora(d) { return d instanceof Date && !isNaN(d) ? d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) : '—'; }
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+</body>
+</html>
