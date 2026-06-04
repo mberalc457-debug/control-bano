@@ -7,121 +7,140 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:#f4f4f5;--surface:#ffffff;--ink:#18181b;--ink2:#71717a;
+    --bg:#f4f4f5;--surface:#fff;--ink:#18181b;--ink2:#71717a;
     --accent:#16a34a;--accent-light:#dcfce7;
     --warn:#f59e0b;--warn-light:#fef3c7;
     --danger:#dc2626;--danger-light:#fee2e2;
-    --border:#e4e4e7;--radius:14px;
+    --border:#e4e4e7;--radius:12px;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
   body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100dvh;}
 
-  /* LOGIN */
-  .login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;padding:32px 24px;gap:20px;}
+  /* ── LOGIN ── */
+  .login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh;padding:32px 20px;gap:20px;}
   .login-icon{font-size:3.5rem;}
   .login-title{font-size:1.4rem;font-weight:700;text-align:center;}
   .login-sub{font-size:.9rem;color:var(--ink2);text-align:center;}
   .login-box{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:24px 20px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:14px;}
-  .login-box label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--ink2);}
+  .login-box label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--ink2);}
   .pass-wrap{position:relative;}
   .pass-wrap input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:13px 44px 13px 14px;font-family:'DM Sans',sans-serif;font-size:1rem;color:var(--ink);outline:none;}
   .pass-wrap input:focus{border-color:var(--accent);}
-  .pass-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--ink2);padding:4px;}
+  .pass-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--ink2);}
   .btn-login{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:14px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;}
-  .btn-login:active{transform:scale(.97);}
   .login-err{background:var(--danger-light);color:var(--danger);border-radius:8px;padding:10px 14px;font-size:.85rem;font-weight:600;text-align:center;display:none;}
   .login-err.vis{display:block;}
 
-  /* APP */
+  /* ── APP ── */
   .app-screen{display:none;}
   .app-screen.vis{display:block;}
 
-  .header{background:var(--accent);color:#fff;padding:14px 16px 12px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.15);}
-  .header-title{font-size:1.05rem;font-weight:700;}
+  /* ── HEADER ── */
+  .header{background:var(--accent);color:#fff;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+  .header-title{font-size:1rem;font-weight:700;}
   .header-right{text-align:right;}
-  .header-time{font-size:.78rem;opacity:.9;font-weight:500;line-height:1.4;}
-  .sync-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;margin-right:4px;opacity:.5;transition:opacity .3s,background .3s;}
+  .header-time{font-size:.75rem;opacity:.9;line-height:1.4;}
+  .reloj{font-size:.85rem;font-weight:700;}
+  .sync-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#fff;margin-right:3px;opacity:.5;}
   .sync-dot.syncing{opacity:1;background:#fde047;animation:blink .6s infinite;}
-  .sync-dot.ok{opacity:1;background:#86efac;animation:none;}
-  .sync-dot.err{opacity:1;background:#fca5a5;animation:none;}
+  .sync-dot.ok{opacity:1;background:#86efac;}
+  .sync-dot.err{opacity:1;background:#fca5a5;}
   @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-  .sync-label{font-size:.68rem;opacity:.85;}
-  .btn-logout{background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:7px;padding:5px 10px;font-size:.75rem;font-weight:700;cursor:pointer;margin-top:4px;}
+  .sync-label{font-size:.65rem;opacity:.85;}
+  .btn-logout{background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:6px;padding:4px 9px;font-size:.72rem;font-weight:700;cursor:pointer;margin-top:3px;}
 
-  .section{padding:12px 14px 0;}
-  .section-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--ink2);margin-bottom:7px;padding-left:2px;}
-  .field{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:13px 14px;font-family:'DM Sans',sans-serif;font-size:1rem;color:var(--ink);width:100%;appearance:none;-webkit-appearance:none;outline:none;}
-  .field:focus{border-color:var(--accent);}
+  /* ── CURSO ── */
+  .curso-bar{padding:10px 14px;background:var(--surface);border-bottom:1px solid var(--border);}
+  .curso-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--ink2);margin-bottom:5px;}
   .select-wrap{position:relative;}
-  .select-wrap::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--ink2);pointer-events:none;}
+  .select-wrap::after{content:'▾';position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--ink2);pointer-events:none;font-size:.9rem;}
+  .field{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:11px 32px 11px 12px;font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--ink);width:100%;appearance:none;-webkit-appearance:none;outline:none;}
+  .field:focus{border-color:var(--accent);}
 
-  .horas-scroll{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none;}
-  .horas-scroll::-webkit-scrollbar{display:none;}
-  .hora-chip{flex-shrink:0;background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:10px 14px;cursor:pointer;transition:all .15s;text-align:center;min-width:80px;position:relative;}
-  .hora-chip.activa{border-color:var(--accent);background:var(--accent-light);}
-  .hora-chip.recreo{background:var(--warn-light);border-color:var(--warn);opacity:.8;pointer-events:none;}
-  .hora-chip .chip-num{font-size:.75rem;font-weight:700;color:var(--accent);}
-  .hora-chip.recreo .chip-num{color:var(--warn);}
-  .hora-chip .chip-rango{font-size:.65rem;color:var(--ink2);margin-top:2px;}
-  .hora-chip .chip-badge{position:absolute;top:-6px;right:-6px;background:var(--danger);color:#fff;border-radius:99px;font-size:.65rem;font-weight:700;padding:2px 6px;display:none;border:2px solid var(--bg);}
-  .hora-chip .chip-badge.vis{display:block;}
+  /* ── HORA ROWS ── */
+  .horas-list{padding:10px 14px;display:flex;flex-direction:column;gap:8px;}
 
-  .add-row{display:flex;gap:8px;align-items:center;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:8px 8px 8px 14px;}
-  .add-row input{flex:1;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--ink);background:transparent;min-width:0;}
-  .add-row input::placeholder{color:var(--ink2);}
-  .btn-add{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:11px 16px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;white-space:nowrap;}
-  .btn-add:active{transform:scale(.96);}
+  .hora-row{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+  .hora-row.recreo{background:var(--warn-light);border-color:var(--warn);}
 
-  .cards-list{display:flex;flex-direction:column;gap:10px;}
-  .alumno-card{background:var(--surface);border-radius:var(--radius);padding:14px;border:1.5px solid var(--border);}
-  .alumno-card.activo{border-color:var(--warn);background:#fffbeb;}
-  .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px;}
-  .card-name{font-weight:700;font-size:1rem;line-height:1.2;}
-  .card-idx{font-size:.75rem;color:var(--ink2);font-weight:500;margin-top:1px;}
-  .card-estado{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:4px 10px;font-size:.75rem;font-weight:700;flex-shrink:0;}
-  .estado-fuera{background:var(--warn-light);color:#92400e;}
-  .estado-ok{background:var(--accent-light);color:#166534;}
-  .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-  .dot-warn{background:var(--warn);animation:pulse 1.2s infinite;}
-  .dot-ok{background:var(--accent);}
+  .hora-header{display:flex;align-items:center;gap:8px;padding:10px 12px;}
+  .hora-label-wrap{display:flex;flex-direction:column;min-width:52px;}
+  .hora-num{font-size:.8rem;font-weight:700;color:var(--accent);}
+  .hora-row.recreo .hora-num{color:#92400e;}
+  .hora-rango{font-size:.62rem;color:var(--ink2);}
+
+  .hora-students{flex:1;display:flex;flex-wrap:wrap;gap:5px;align-items:center;}
+  .student-pill{display:inline-flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--border);border-radius:99px;padding:3px 9px;font-size:.75rem;font-weight:600;cursor:pointer;transition:background .15s;}
+  .student-pill:hover{background:var(--accent-light);}
+  .student-pill.out{background:var(--warn-light);border-color:var(--warn);}
+  .student-pill.back{background:var(--accent-light);border-color:#86efac;}
+  .pill-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+  .pill-dot.warn{background:var(--warn);animation:pulse 1.2s infinite;}
+  .pill-dot.ok{background:var(--accent);}
   @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
-  .card-times{display:flex;gap:12px;margin-bottom:10px;font-size:.8rem;color:var(--ink2);flex-wrap:wrap;}
-  .card-times strong{color:var(--ink);font-weight:600;}
-  .card-dur{font-size:.8rem;font-weight:700;margin-bottom:10px;}
-  .card-dur.larga{color:var(--danger);}
-  .card-actions{display:flex;gap:8px;}
-  .btn-card{flex:1;border:none;border-radius:9px;padding:11px 10px;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;}
-  .btn-card:active{transform:scale(.96);}
+
+  .btn-add-hora{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:6px 10px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+  .btn-add-hora:active{transform:scale(.95);}
+
+  /* ── INLINE FORM ── */
+  .inline-form{padding:10px 12px;background:#f8fdf9;border-top:1px solid var(--accent-light);display:none;}
+  .inline-form.open{display:block;}
+  .inline-form-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--accent);margin-bottom:6px;}
+  .inline-input-row{display:flex;gap:8px;align-items:center;position:relative;}
+  .inline-input{flex:1;border:1.5px solid var(--border);border-radius:9px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--ink);outline:none;background:var(--surface);}
+  .inline-input:focus{border-color:var(--accent);}
+  .btn-inline-ok{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 14px;font-size:.85rem;font-weight:700;cursor:pointer;}
+  .btn-inline-cancel{background:var(--bg);color:var(--ink2);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-size:.85rem;font-weight:700;cursor:pointer;}
+
+  /* autocomplete */
+  .autocomplete-list{position:absolute;top:100%;left:0;right:60px;background:var(--surface);border:1.5px solid var(--border);border-radius:9px;margin-top:4px;z-index:20;box-shadow:0 4px 16px rgba(0,0,0,.1);overflow:hidden;display:none;}
+  .autocomplete-list.open{display:block;}
+  .ac-item{padding:10px 12px;font-size:.9rem;cursor:pointer;border-bottom:1px solid var(--border);}
+  .ac-item:last-child{border-bottom:none;}
+  .ac-item:hover,.ac-item:active{background:var(--accent-light);}
+
+  /* ── STUDENT DETAIL ── */
+  .student-detail{padding:10px 12px;border-top:1px solid var(--border);background:#fafafa;display:none;}
+  .student-detail.open{display:block;}
+  .sd-name{font-weight:700;font-size:.95rem;margin-bottom:6px;}
+  .sd-times{display:flex;gap:10px;font-size:.78rem;color:var(--ink2);flex-wrap:wrap;margin-bottom:8px;}
+  .sd-times strong{color:var(--ink);}
+  .sd-dur{font-size:.8rem;font-weight:700;margin-bottom:8px;}
+  .sd-dur.larga{color:var(--danger);}
+  .sd-actions{display:flex;gap:7px;}
+  .btn-sd{flex:1;border:none;border-radius:8px;padding:10px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;}
+  .btn-sd:active{transform:scale(.96);}
   .btn-vuelto{background:var(--accent);color:#fff;}
-  .btn-del{background:var(--danger-light);color:var(--danger);flex:0 0 auto;min-width:44px;}
+  .btn-del{background:var(--danger-light);color:var(--danger);flex:0 0 auto;}
+  .btn-close-sd{background:var(--bg);color:var(--ink2);border:1.5px solid var(--border);flex:0 0 auto;}
 
-  .empty{text-align:center;padding:40px 20px;color:var(--ink2);}
-  .empty .icon{font-size:2.8rem;margin-bottom:10px;}
-  .empty p{font-size:.9rem;line-height:1.5;}
+  /* ── STATS ── */
+  .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px 14px 0;}
+  .stat-box{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:8px 4px;text-align:center;}
+  .stat-val{font-size:1.3rem;font-weight:700;color:var(--accent);line-height:1;}
+  .stat-lbl{font-size:.58rem;color:var(--ink2);font-weight:600;margin-top:2px;text-transform:uppercase;letter-spacing:.3px;}
 
-  .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;}
-  .stat-box{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:10px 6px;text-align:center;}
-  .stat-val{font-size:1.4rem;font-weight:700;color:var(--accent);line-height:1;}
-  .stat-lbl{font-size:.62rem;color:var(--ink2);font-weight:600;margin-top:3px;text-transform:uppercase;letter-spacing:.4px;}
-
+  /* ── BOTTOM BAR ── */
   .bottom-bar{position:sticky;bottom:0;z-index:40;background:var(--surface);border-top:1px solid var(--border);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:flex;gap:8px;}
-  .btn-bar{flex:1;border:none;border-radius:12px;padding:13px 10px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;}
+  .btn-bar{flex:1;border:none;border-radius:10px;padding:12px 8px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;}
   .btn-bar:active{transform:scale(.97);}
   .btn-bar-outline{background:var(--bg);color:var(--ink);border:1.5px solid var(--border);}
   .btn-bar-green{background:var(--accent);color:#fff;}
 
+  /* ── MODAL ── */
   .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:flex-end;justify-content:center;}
   .modal-overlay.open{display:flex;}
   .modal{background:var(--surface);border-radius:20px 20px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));width:100%;max-height:75dvh;display:flex;flex-direction:column;gap:12px;}
   .modal-handle{width:40px;height:4px;background:var(--border);border-radius:99px;margin:0 auto 4px;}
-  .modal h3{font-size:1.05rem;font-weight:700;}
-  .modal pre{background:#18181b;color:#e4e4e7;border-radius:10px;padding:14px;font-size:.75rem;overflow:auto;flex:1;white-space:pre-wrap;line-height:1.6;}
+  .modal h3{font-size:1rem;font-weight:700;}
+  .modal pre{background:#18181b;color:#e4e4e7;border-radius:10px;padding:14px;font-size:.72rem;overflow:auto;flex:1;white-space:pre-wrap;line-height:1.6;}
   .modal-btns{display:flex;gap:8px;}
-  .modal-btns button{flex:1;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;}
+  .modal-btns button{flex:1;border:none;border-radius:10px;padding:12px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;}
   .btn-copy{background:var(--accent);color:#fff;}
   .btn-close-m{background:var(--bg);color:var(--ink);}
 
-  .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#18181b;color:#fff;border-radius:10px;padding:10px 18px;font-size:.85rem;font-weight:600;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
+  /* ── TOAST ── */
+  .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#18181b;color:#fff;border-radius:10px;padding:9px 16px;font-size:.82rem;font-weight:600;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
   .toast.show{opacity:1;}
   .spacer{height:80px;}
 </style>
@@ -132,7 +151,7 @@
 <div class="login-screen" id="login-screen">
   <div class="login-icon">🚻</div>
   <div class="login-title">Control de Baño<br>IES San Antonio</div>
-  <div class="login-sub">Introduce la contraseña del centro para acceder</div>
+  <div class="login-sub">Introduce la contraseña del centro</div>
   <div class="login-box">
     <label>Contraseña</label>
     <div class="pass-wrap">
@@ -146,24 +165,25 @@
 
 <!-- APP -->
 <div class="app-screen" id="app-screen">
+
   <div class="header">
     <div class="header-title">🚻 Control de Baño</div>
     <div class="header-right">
       <div class="header-time">
         <div id="fecha-hoy"></div>
-        <div id="reloj-live" style="font-size:.9rem;font-weight:700"></div>
+        <div class="reloj" id="reloj-live"></div>
       </div>
-      <div style="margin-top:4px;display:flex;align-items:center;justify-content:flex-end;gap:8px;">
+      <div style="margin-top:3px;display:flex;align-items:center;justify-content:flex-end;gap:7px;">
         <span><span class="sync-dot" id="sync-dot"></span><span class="sync-label" id="sync-label">Listo</span></span>
         <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
       </div>
     </div>
   </div>
 
-  <div class="section" style="padding-top:14px">
-    <div class="section-label">Curso</div>
+  <div class="curso-bar">
+    <div class="curso-label">Curso</div>
     <div class="select-wrap">
-      <select class="field" id="sel-curso">
+      <select class="field" id="sel-curso" onchange="renderHoras()">
         <option value="">— Selecciona curso —</option>
         <optgroup label="1.º ESO"><option>1.º ESO A</option><option>1.º ESO B</option><option>1.º ESO C</option><option>1.º ESO D</option></optgroup>
         <optgroup label="2.º ESO"><option>2.º ESO A</option><option>2.º ESO B</option><option>2.º ESO C</option><option>2.º ESO D</option></optgroup>
@@ -173,33 +193,16 @@
     </div>
   </div>
 
-  <div class="section">
-    <div class="section-label">Hora lectiva</div>
-    <div class="horas-scroll" id="horas-scroll"></div>
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-box"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">Total</div></div>
+    <div class="stat-box"><div class="stat-val" id="st-fuera" style="color:var(--warn)">0</div><div class="stat-lbl">Fuera</div></div>
+    <div class="stat-box"><div class="stat-val" id="st-media">—</div><div class="stat-lbl">Media</div></div>
+    <div class="stat-box"><div class="stat-val" id="st-max">—</div><div class="stat-lbl">Máx</div></div>
   </div>
 
-  <div class="section" id="add-section" style="display:none">
-    <div class="section-label">Registrar salida</div>
-    <div class="add-row">
-      <input type="text" id="inp-alumno" placeholder="Nombre del alumno/a" autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')registrarSalida()">
-      <button class="btn-add" onclick="registrarSalida()">➕ Registrar</button>
-    </div>
-  </div>
-
-  <div class="section" id="stats-section" style="display:none">
-    <div class="stats-bar">
-      <div class="stat-box"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">Total</div></div>
-      <div class="stat-box"><div class="stat-val" id="st-fuera" style="color:var(--warn)">0</div><div class="stat-lbl">Fuera</div></div>
-      <div class="stat-box"><div class="stat-val" id="st-media">—</div><div class="stat-lbl">Media</div></div>
-      <div class="stat-box"><div class="stat-val" id="st-max">—</div><div class="stat-lbl">Máx</div></div>
-    </div>
-  </div>
-
-  <div class="section" style="padding-bottom:0;margin-bottom:10px">
-    <div id="cards-wrap">
-      <div class="empty"><div class="icon">🚪</div><p>Selecciona un curso y una hora lectiva.</p></div>
-    </div>
-  </div>
+  <!-- HORAS -->
+  <div class="horas-list" id="horas-list"></div>
 
   <div class="spacer"></div>
 
@@ -208,6 +211,7 @@
     <button class="btn-bar btn-bar-outline" onclick="forzarSync()">🔄 Actualizar</button>
     <button class="btn-bar btn-bar-green" onclick="exportarExcel()">📥 Excel</button>
   </div>
+
 </div>
 
 <!-- MODAL -->
@@ -224,12 +228,21 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="modal-alerta">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div style="font-size:2rem;text-align:center">⚠️</div>
+    <p id="alerta-msg" style="text-align:center;font-size:.95rem;font-weight:600;line-height:1.5;padding:0 8px"></p>
+    <div class="modal-btns">
+      <button class="btn-copy" onclick="document.getElementById('modal-alerta').classList.remove('open')">Entendido</button>
+    </div>
+  </div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <script>
-// ── CONTRASEÑA ───────────────────────────────────────
 const PASSWORD = '0000';
-const STORAGE_KEY = 'ies_bano_registros';
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwL8J3GHIZxlq8-IqKXsnE7kkZlFR98Usfr8mayHe6RpjH9voynBFlDmwOJO2JC5Jqa/exec';
 
 const HORAS = [
@@ -242,17 +255,21 @@ const HORAS = [
   {label:'6ª',rango:'14:00-15:00'},
 ];
 
+// registros[horaIdx][curso] = [{alumno, salida, regreso}]
 let registros = {};
 HORAS.forEach((_,i) => registros[i] = {});
-let horaActual = null;
+
+// activeForm: {horaIdx} — which hour has the inline form open
+let activeForm = null;
+// activeDetail: {horaIdx, alumnoIdx} — which student detail is open
+let activeDetail = null;
 let timerRender = null;
 
 // ── LOGIN ────────────────────────────────────────────
 function togglePass() {
-  const inp = document.getElementById('inp-pass');
-  inp.type = inp.type === 'password' ? 'text' : 'password';
+  const i = document.getElementById('inp-pass');
+  i.type = i.type === 'password' ? 'text' : 'password';
 }
-
 function intentarLogin() {
   const pass = document.getElementById('inp-pass').value.trim();
   if (pass === PASSWORD) {
@@ -264,15 +281,14 @@ function intentarLogin() {
     document.getElementById('login-err').classList.add('vis');
   }
 }
-
 function cerrarSesion() {
-  horaActual = null;
   document.getElementById('app-screen').classList.remove('vis');
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('inp-pass').value = '';
+  activeForm = null; activeDetail = null;
 }
 
-// ── INICIO ───────────────────────────────────────────
+// ── INIT ─────────────────────────────────────────────
 async function iniciarApp() {
   document.getElementById('fecha-hoy').textContent =
     new Date().toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
@@ -281,14 +297,19 @@ async function iniciarApp() {
   setInterval(() => cargarDatos(true), 20000);
 }
 
-// ── RELOJ ────────────────────────────────────────────
+
+
+// ── CLOCK ────────────────────────────────────────────
 function tick() {
   document.getElementById('reloj-live').textContent =
     new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  // refresh durations every minute
+  clearTimeout(timerRender);
+  timerRender = setTimeout(() => { renderHoras(); tick(); }, 60000);
 }
 setInterval(tick, 1000);
 
-// ── SYNC STATE ───────────────────────────────────────
+// ── SYNC ─────────────────────────────────────────────
 function setSyncState(state, txt) {
   const dot = document.getElementById('sync-dot');
   const lbl = document.getElementById('sync-label');
@@ -297,7 +318,6 @@ function setSyncState(state, txt) {
   lbl.textContent = txt;
 }
 
-// ── STORAGE ──────────────────────────────────────────
 async function cargarDatos(silencioso = false) {
   if (!silencioso) setSyncState('syncing', 'Cargando…');
   try {
@@ -306,7 +326,7 @@ async function cargarDatos(silencioso = false) {
     if (data.error) { setSyncState('err', 'Sin acceso'); return; }
     registros = deserializar(data.rows);
     setSyncState('ok', 'Sincronizado ✓');
-    badges(); render();
+    renderHoras(); renderStats();
   } catch(e) {
     setSyncState('err', 'Sin conexión');
     if (!silencioso) mostrarToast('⚠️ No se pudo cargar.');
@@ -322,13 +342,16 @@ async function guardarDatos() {
     const res = await fetch(url);
     const json = await res.json();
     if (json.ok) setSyncState('ok', 'Guardado ✓');
-    else { setSyncState('err', 'Error al guardar'); mostrarToast('⚠️ No se pudo guardar.'); }
+    else { setSyncState('err', 'Error'); mostrarToast('⚠️ No se pudo guardar.'); }
   } catch(e) {
     setSyncState('err', 'Error al guardar');
     mostrarToast('⚠️ No se pudo guardar.');
   }
 }
 
+function forzarSync() { mostrarToast('🔄 Actualizando…'); cargarDatos(false); }
+
+// ── SERIALIZAR ───────────────────────────────────────
 function serializar() {
   const rows = [['horaIdx','curso','alumno','salida','regreso']];
   HORAS.forEach((_,i) => {
@@ -356,102 +379,231 @@ function deserializar(rows) {
   return n;
 }
 
-function forzarSync() {
-  mostrarToast('🔄 Actualizando…');
-  cargarDatos(false);
+// ── RENDER HORAS ─────────────────────────────────────
+function renderHoras() {
+  const curso = document.getElementById('sel-curso').value;
+  const list = document.getElementById('horas-list');
+  list.innerHTML = '';
+
+  HORAS.forEach((h, i) => {
+    const row = document.createElement('div');
+    row.className = 'hora-row' + (h.recreo ? ' recreo' : '');
+    row.id = `hora-row-${i}`;
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'hora-header';
+
+    const labelWrap = document.createElement('div');
+    labelWrap.className = 'hora-label-wrap';
+    labelWrap.innerHTML = `<span class="hora-num">${h.label}</span><span class="hora-rango">${h.rango}</span>`;
+
+    const studentsWrap = document.createElement('div');
+    studentsWrap.className = 'hora-students';
+
+    if (curso && !h.recreo) {
+      const lista = registros[i][curso] || [];
+      lista.forEach((r, idx) => {
+        const pill = document.createElement('span');
+        const activo = !r.regreso;
+        pill.className = `student-pill ${activo ? 'out' : 'back'}`;
+        pill.innerHTML = `<span class="pill-dot ${activo?'warn':'ok'}"></span>${esc(r.alumno)}`;
+        pill.onclick = () => toggleDetail(i, idx);
+        studentsWrap.appendChild(pill);
+      });
+    }
+
+    header.appendChild(labelWrap);
+    header.appendChild(studentsWrap);
+
+    if (!h.recreo) {
+      const btnAdd = document.createElement('button');
+      btnAdd.className = 'btn-add-hora';
+      btnAdd.textContent = '➕';
+      btnAdd.onclick = () => toggleForm(i);
+      header.appendChild(btnAdd);
+    }
+
+    row.appendChild(header);
+
+    // Inline form
+    if (!h.recreo) {
+      const form = document.createElement('div');
+      form.className = 'inline-form' + (activeForm === i ? ' open' : '');
+      form.id = `form-${i}`;
+      form.innerHTML = `
+        <div class="inline-form-label">Nombre del alumno/a</div>
+        <div class="inline-input-row">
+          <input class="inline-input" id="inp-${i}" type="text" placeholder="Escribe el nombre…" autocomplete="off" autocorrect="off" spellcheck="false">
+          <button class="btn-inline-ok" onclick="registrarSalida(${i})">✅</button>
+          <button class="btn-inline-cancel" onclick="cerrarForm()">✖</button>
+          <div class="autocomplete-list" id="ac-${i}"></div>
+        </div>`;
+      row.appendChild(form);
+
+      // Bind input events after appending
+      setTimeout(() => {
+        const inp = document.getElementById(`inp-${i}`);
+        if (!inp) return;
+        inp.addEventListener('input', () => mostrarAutocomplete(i));
+        inp.addEventListener('keydown', e => { if (e.key === 'Enter') registrarSalida(i); if (e.key === 'Escape') cerrarForm(); });
+        if (activeForm === i) { inp.focus(); mostrarAutocomplete(i); }
+      }, 0);
+    }
+
+    // Student details
+    if (curso && !h.recreo) {
+      const lista = registros[i][curso] || [];
+      lista.forEach((r, idx) => {
+        const detail = document.createElement('div');
+        const isActive = activeDetail && activeDetail.horaIdx === i && activeDetail.alumnoIdx === idx;
+        detail.className = 'student-detail' + (isActive ? ' open' : '');
+        detail.id = `detail-${i}-${idx}`;
+        detail.innerHTML = buildDetailHTML(r, i, idx);
+        row.appendChild(detail);
+      });
+    }
+
+    list.appendChild(row);
+  });
+
+  renderStats();
 }
 
-// ── HORAS ────────────────────────────────────────────
-const scroll = document.getElementById('horas-scroll');
-HORAS.forEach((h,i) => {
-  const d = document.createElement('div');
-  d.className = 'hora-chip'+(h.recreo?' recreo':'');
-  d.id = `hc-${i}`;
-  d.innerHTML = `<div class="chip-num">${h.label}</div><div class="chip-rango">${h.rango}</div><span class="chip-badge" id="b-${i}">0</span>`;
-  if (!h.recreo) d.onclick = () => selHora(i);
-  scroll.appendChild(d);
-});
-
-function selHora(i) {
-  horaActual = i;
-  document.querySelectorAll('.hora-chip').forEach(c => c.classList.remove('activa'));
-  document.getElementById(`hc-${i}`).classList.add('activa');
-  render();
+function buildDetailHTML(r, horaIdx, idx) {
+  const now = new Date();
+  const fin = r.regreso || now;
+  const dur = Math.floor((fin - r.salida) / 60000);
+  const activo = !r.regreso;
+  return `
+    <div class="sd-name">${esc(r.alumno)}</div>
+    <div class="sd-times">
+      <span>🚶 Salida: <strong>${fmtHora(r.salida)}</strong></span>
+      ${r.regreso ? `<span>🏫 Regreso: <strong>${fmtHora(r.regreso)}</strong></span>` : ''}
+    </div>
+    <div class="sd-dur${dur >= 10 ? ' larga' : ''}">⏱ ${dur} min${activo ? ' (en curso)' : ''}</div>
+    <div class="sd-actions">
+      ${activo ? `<button class="btn-sd btn-vuelto" onclick="registrarRegreso(${horaIdx},${idx})">✅ Ha vuelto</button>` : '<div style="flex:1"></div>'}
+      <button class="btn-sd btn-del" onclick="borrarAlumno(${horaIdx},${idx})">🗑</button>
+      <button class="btn-sd btn-close-sd" onclick="cerrarDetail()">✖</button>
+    </div>`;
 }
 
-document.getElementById('sel-curso').addEventListener('change', render);
+// ── AUTOCOMPLETE ─────────────────────────────────────
+function mostrarAutocomplete(horaIdx) {
+  const curso = document.getElementById('sel-curso').value;
+  const inp = document.getElementById(`inp-${horaIdx}`);
+  const ac = document.getElementById(`ac-${horaIdx}`);
+  if (!inp || !ac || !curso) return;
+
+  const query = inp.value.trim().toLowerCase();
+  // gather all names used in this course today
+  const nombres = new Set();
+  HORAS.forEach((_,i) => {
+    (registros[i][curso] || []).forEach(r => nombres.add(r.alumno));
+  });
+
+  const matches = [...nombres].filter(n => n.toLowerCase().includes(query) && query.length > 0);
+
+  if (matches.length === 0) { ac.classList.remove('open'); ac.innerHTML = ''; return; }
+
+  ac.innerHTML = matches.map(n => `<div class="ac-item" onclick="seleccionarNombre(${horaIdx},'${esc(n)}')">${esc(n)}</div>`).join('');
+  ac.classList.add('open');
+}
+
+function seleccionarNombre(horaIdx, nombre) {
+  const inp = document.getElementById(`inp-${horaIdx}`);
+  const ac = document.getElementById(`ac-${horaIdx}`);
+  if (inp) inp.value = nombre;
+  if (ac) { ac.classList.remove('open'); ac.innerHTML = ''; }
+}
+
+// ── FORM ─────────────────────────────────────────────
+function toggleForm(horaIdx) {
+  const curso = document.getElementById('sel-curso').value;
+  if (!curso) { mostrarToast('⚠️ Selecciona un curso primero.'); return; }
+  activeForm = activeForm === horaIdx ? null : horaIdx;
+  activeDetail = null;
+  renderHoras();
+}
+
+function cerrarForm() {
+  activeForm = null;
+  renderHoras();
+}
+
+// ── DETAIL ───────────────────────────────────────────
+function toggleDetail(horaIdx, alumnoIdx) {
+  if (activeDetail && activeDetail.horaIdx === horaIdx && activeDetail.alumnoIdx === alumnoIdx) {
+    activeDetail = null;
+  } else {
+    activeDetail = {horaIdx, alumnoIdx};
+    activeForm = null;
+  }
+  renderHoras();
+}
+
+function cerrarDetail() {
+  activeDetail = null;
+  renderHoras();
+}
 
 // ── REGISTRAR ────────────────────────────────────────
-function registrarSalida() {
+function registrarSalida(horaIdx) {
   const curso = document.getElementById('sel-curso').value;
-  const nombre = document.getElementById('inp-alumno').value.trim();
-  if (!curso) { mostrarToast('⚠️ Selecciona un curso.'); return; }
+  const inp = document.getElementById(`inp-${horaIdx}`);
+  const nombre = inp ? inp.value.trim() : '';
   if (!nombre) { mostrarToast('⚠️ Escribe el nombre del alumno/a.'); return; }
-  if (horaActual === null) { mostrarToast('⚠️ Selecciona una hora lectiva.'); return; }
-  if (!registros[horaActual][curso]) registros[horaActual][curso] = [];
-  registros[horaActual][curso].push({alumno: nombre, salida: new Date(), regreso: null});
-  document.getElementById('inp-alumno').value = '';
-  document.getElementById('inp-alumno').focus();
-  render(); badges(); guardarDatos();
+  if (!registros[horaIdx][curso]) registros[horaIdx][curso] = [];
+  registros[horaIdx][curso].push({alumno: nombre, salida: new Date(), regreso: null});
+  activeForm = null;
+  activeDetail = {horaIdx, alumnoIdx: registros[horaIdx][curso].length - 1};
+  renderHoras(); guardarDatos();
   mostrarToast('✅ Salida registrada');
+
+  // Contar cuántas veces ha salido hoy este alumno en este curso
+  const hoy = new Date().toDateString();
+  let vecesHoy = 0;
+  HORAS.forEach((_,i) => {
+    (registros[i][curso] || []).forEach(r => {
+      if (r.alumno.trim().toLowerCase() === nombre.trim().toLowerCase() &&
+          new Date(r.salida).toDateString() === hoy) vecesHoy++;
+    });
+  });
+  if (vecesHoy >= 3) {
+    setTimeout(() => mostrarAlerta(`⚠️ El/La alumno/a "${nombre}" ha salido un número elevado de veces hoy (${vecesHoy} veces).`), 100);
+  }
 }
 
-function regresarAlumno(idx) {
+function registrarRegreso(horaIdx, alumnoIdx) {
   const curso = document.getElementById('sel-curso').value;
-  registros[horaActual][curso][idx].regreso = new Date();
-  render(); badges(); guardarDatos();
+  registros[horaIdx][curso][alumnoIdx].regreso = new Date();
+  renderHoras(); guardarDatos();
   mostrarToast('✅ Regreso registrado');
 }
 
-function borrarAlumno(idx) {
+function borrarAlumno(horaIdx, alumnoIdx) {
   const curso = document.getElementById('sel-curso').value;
   if (confirm('¿Eliminar este registro?')) {
-    registros[horaActual][curso].splice(idx, 1);
-    render(); badges(); guardarDatos();
+    registros[horaIdx][curso].splice(alumnoIdx, 1);
+    activeDetail = null;
+    renderHoras(); guardarDatos();
   }
 }
 
-// ── RENDER ───────────────────────────────────────────
-function render() {
-  clearTimeout(timerRender);
+// ── STATS ────────────────────────────────────────────
+function renderStats() {
   const curso = document.getElementById('sel-curso').value;
-  const wrap = document.getElementById('cards-wrap');
-  const addSec = document.getElementById('add-section');
-  const statsSec = document.getElementById('stats-section');
-
-  if (horaActual === null || !curso) {
-    addSec.style.display = 'none'; statsSec.style.display = 'none';
-    wrap.innerHTML = `<div class="empty"><div class="icon">🚪</div><p>${horaActual === null ? 'Selecciona una hora lectiva.' : 'Selecciona un curso.'}</p></div>`;
-    return;
-  }
-  addSec.style.display = 'block';
-  const lista = registros[horaActual][curso] || [];
-  if (!lista.length) {
-    statsSec.style.display = 'none';
-    wrap.innerHTML = `<div class="empty"><div class="icon">✅</div><p>Sin salidas en ${HORAS[horaActual].label} hora — ${curso}.</p></div>`;
-    return;
-  }
-  statsSec.style.display = 'block';
-  const now = new Date(); let fuera = 0; const durs = [];
-  const cards = lista.map((r,idx) => {
-    const fin = r.regreso || now;
-    const dur = Math.floor((fin - r.salida) / 60000);
-    const activo = !r.regreso;
-    if (activo) fuera++; else durs.push(dur);
-    return `<div class="alumno-card${activo?' activo':''}">
-      <div class="card-top">
-        <div><div class="card-name">${esc(r.alumno)}</div><div class="card-idx">#${idx+1} · ${HORAS[horaActual].label} · ${curso}</div></div>
-        <span class="card-estado ${activo?'estado-fuera':'estado-ok'}"><span class="dot ${activo?'dot-warn':'dot-ok'}"></span>${activo?'Fuera':'Vuelto'}</span>
-      </div>
-      <div class="card-times"><span>🚶 Salida: <strong>${fmtHora(r.salida)}</strong></span>${r.regreso?`<span>🏫 Regreso: <strong>${fmtHora(r.regreso)}</strong></span>`:''}</div>
-      <div class="card-dur${dur>=10?' larga':''}" style="margin-bottom:10px">⏱ ${dur} min${activo?' (en curso)':''}</div>
-      <div class="card-actions">
-        ${activo?`<button class="btn-card btn-vuelto" onclick="regresarAlumno(${idx})">✅ Ha vuelto</button>`:'<div style="flex:1"></div>'}
-        <button class="btn-card btn-del" onclick="borrarAlumno(${idx})">🗑</button>
-      </div></div>`;
-  }).join('');
-  wrap.innerHTML = `<div class="cards-list">${cards}</div>`;
-  document.getElementById('st-total').textContent = lista.length;
+  let total = 0, fuera = 0; const durs = [];
+  const now = new Date();
+  HORAS.forEach((_,i) => {
+    (registros[i][curso] || []).forEach(r => {
+      total++;
+      if (!r.regreso) fuera++;
+      else durs.push(Math.floor((r.regreso - r.salida) / 60000));
+    });
+  });
+  document.getElementById('st-total').textContent = total;
   document.getElementById('st-fuera').textContent = fuera;
   if (durs.length) {
     document.getElementById('st-media').textContent = Math.round(durs.reduce((a,b)=>a+b,0)/durs.length);
@@ -460,15 +612,6 @@ function render() {
     document.getElementById('st-media').textContent = '—';
     document.getElementById('st-max').textContent = '—';
   }
-  if (fuera > 0) timerRender = setTimeout(render, 30000);
-}
-
-function badges() {
-  HORAS.forEach((_,i) => {
-    let n = 0; Object.values(registros[i]).forEach(arr => n += arr.length);
-    const b = document.getElementById(`b-${i}`);
-    b.textContent = n; b.classList.toggle('vis', n > 0);
-  });
 }
 
 // ── RESUMEN ──────────────────────────────────────────
@@ -495,19 +638,14 @@ function abrirResumen() {
 function cerrarModal() { document.getElementById('modal').classList.remove('open'); }
 function copiarResumen() {
   navigator.clipboard.writeText(document.getElementById('modal-content').textContent)
-    .then(() => mostrarToast('📄 Copiado al portapapeles'))
+    .then(() => mostrarToast('📄 Copiado'))
     .catch(() => mostrarToast('No se pudo copiar'));
 }
 document.getElementById('modal').addEventListener('click', e => {
   if (e.target === document.getElementById('modal')) cerrarModal();
 });
 
-// ── UTILS ────────────────────────────────────────────
-function mostrarToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
-}
+// ── EXCEL ────────────────────────────────────────────
 function exportarExcel() {
   if (typeof XLSX === 'undefined') { mostrarToast('⚠️ Cargando librería…'); return; }
   const fecha = new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
@@ -525,14 +663,24 @@ function exportarExcel() {
   });
   if (rows.length === 1) { mostrarToast('⚠️ No hay datos para exportar.'); return; }
   const ws = XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols'] = [{wch:12},{wch:6},{wch:14},{wch:14},{wch:24},{wch:12},{wch:12},{wch:16},{wch:10}];
+  ws['!cols'] = [{wch:12},{wch:6},{wch:14},{wch:14},{wch:24},{wch:12},{wch:12},{wch:14},{wch:10}];
   XLSX.utils.book_append_sheet(wb, ws, 'Registros');
   XLSX.writeFile(wb, `Control_Bano_${fecha.replace(/\//g,'-')}.xlsx`);
   mostrarToast('📥 Excel descargado');
 }
 
+// ── UTILS ────────────────────────────────────────────
+function mostrarAlerta(msg) {
+  document.getElementById('alerta-msg').textContent = msg;
+  document.getElementById('modal-alerta').classList.add('open');
+}
+function mostrarToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
 function fmtHora(d) { return d instanceof Date && !isNaN(d) ? d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) : '—'; }
-function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;'); }
 </script>
 </body>
 </html>
