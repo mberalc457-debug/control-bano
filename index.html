@@ -354,7 +354,7 @@ function forzarSync() { mostrarToast('🔄 Actualizando…'); cargarDatos(false)
 // ── SERIALIZAR ───────────────────────────────────────
 function serializar() {
   const fecha = new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
-  const rows = [['Fecha','horaIdx','Hora','Franja','Curso','Alumno/a','Salida','Regreso','Duración (min)','Estado']];
+  const rows = [['Fecha','horaIdx','Hora','Franja','Curso','Alumno/a','SalidaISO','RegresoISO','Duración (min)','Estado']];
   HORAS.forEach((h,i) => {
     if (h.recreo) return;
     Object.keys(registros[i]).forEach(c => {
@@ -363,8 +363,8 @@ function serializar() {
         const dur = Math.floor((fin - r.salida) / 60000);
         rows.push([
           fecha, i, h.label, h.rango, c, r.alumno,
-          fmtHora(r.salida),
-          r.regreso ? fmtHora(r.regreso) : 'Fuera',
+          r.salida.toISOString(),
+          r.regreso ? r.regreso.toISOString() : '',
           dur,
           r.regreso ? 'Vuelto' : 'Fuera'
         ]);
@@ -381,26 +381,18 @@ function deserializar(rows) {
   const hoy = new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
   for (let i = 1; i < rows.length; i++) {
     const r = rows[i].map(String);
-    const fecha = r[0], hi = r[1], curso = r[4], alumno = r[5], salidaStr = r[6], regresoStr = r[7];
-    if (!fecha || !hi || !curso || !alumno) continue;
+    const fecha = r[0], hi = r[1], curso = r[4], alumno = r[5];
+    const salidaISO = r[6], regresoISO = r[7];
+    if (!fecha || !hi || !curso || !alumno || !salidaISO) continue;
     if (fecha !== hoy) continue;
     const idx = parseInt(hi);
     if (isNaN(idx) || idx < 0 || idx >= HORAS.length) continue;
     if (!n[idx][curso]) n[idx][curso] = [];
-    const [d,m,y] = fecha.split('/');
-    const salida = parseFechaHora(`${y}-${m}-${d}`, salidaStr);
-    const regreso = regresoStr && regresoStr !== 'Fuera' ? parseFechaHora(`${y}-${m}-${d}`, regresoStr) : null;
-    if (salida) n[idx][curso].push({alumno, salida, regreso});
+    const salida = new Date(salidaISO);
+    const regreso = regresoISO && regresoISO !== '' ? new Date(regresoISO) : null;
+    if (!isNaN(salida)) n[idx][curso].push({alumno, salida, regreso});
   }
   return n;
-}
-
-function parseFechaHora(fechaISO, horaStr) {
-  if (!horaStr || horaStr === 'Fuera') return null;
-  const [h,m,s] = horaStr.split(':').map(Number);
-  const d = new Date(fechaISO);
-  d.setHours(h||0, m||0, s||0, 0);
-  return d;
 }
 
 // ── RENDER HORAS ─────────────────────────────────────
