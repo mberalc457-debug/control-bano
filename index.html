@@ -243,7 +243,7 @@
 
 <script>
 const PASSWORD = '0000';
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbznb33Z6hUbJ1XRrv9NC0GHVEsPxm68m9tqlKYfEk1DEgrAxYfTSwzldDKOHXzUvNFw/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxbfQ-EHckkXqwSfTKqTrPAHse9bOCRIYlhgE19RPtq4byO8INvCLIPZYEY3iBGzjMJ/exec';
 
 const HORAS = [
   {label:'1ª',rango:'08:30-09:30'},
@@ -354,7 +354,7 @@ function forzarSync() { mostrarToast('🔄 Actualizando…'); cargarDatos(false)
 // ── SERIALIZAR ───────────────────────────────────────
 function serializar() {
   const fecha = new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
-  const rows = [['Fecha','Hora','Franja','Curso','Alumno/a','Salida','Regreso','Duración (min)','Estado']];
+  const rows = [['Fecha','horaIdx','Hora','Franja','Curso','Alumno/a','Salida','Regreso','Duración (min)','Estado']];
   HORAS.forEach((h,i) => {
     if (h.recreo) return;
     Object.keys(registros[i]).forEach(c => {
@@ -362,11 +362,7 @@ function serializar() {
         const fin = r.regreso || new Date();
         const dur = Math.floor((fin - r.salida) / 60000);
         rows.push([
-          fecha,
-          h.label,
-          h.rango,
-          c,
-          r.alumno,
+          fecha, i, h.label, h.rango, c, r.alumno,
           fmtHora(r.salida),
           r.regreso ? fmtHora(r.regreso) : 'Fuera',
           dur,
@@ -382,26 +378,24 @@ function deserializar(rows) {
   const n = {};
   HORAS.forEach((_,i) => n[i] = {});
   if (!rows || rows.length <= 1) return n;
-  // cabecera: Fecha, Hora(label), Franja, Curso, Alumno, Salida(hhmm), Regreso(hhmm), Dur, Estado
   const hoy = new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
   for (let i = 1; i < rows.length; i++) {
-    const [fecha, horaLabel, franja, curso, alumno, salidaStr, regresoStr] = rows[i].map(String);
-    if (!fecha || !horaLabel || !curso || !alumno) continue;
-    if (fecha !== hoy) continue; // solo cargar registros de hoy
-    const idx = HORAS.findIndex(h => h.label === horaLabel);
-    if (idx === -1) continue;
+    const r = rows[i].map(String);
+    const fecha = r[0], hi = r[1], curso = r[4], alumno = r[5], salidaStr = r[6], regresoStr = r[7];
+    if (!fecha || !hi || !curso || !alumno) continue;
+    if (fecha !== hoy) continue;
+    const idx = parseInt(hi);
+    if (isNaN(idx) || idx < 0 || idx >= HORAS.length) continue;
     if (!n[idx][curso]) n[idx][curso] = [];
-    // reconstruir fechas combinando fecha + hora
     const [d,m,y] = fecha.split('/');
-    const salidaDate = parseFechaHora(`${y}-${m}-${d}`, salidaStr);
-    const regresoDate = regresoStr && regresoStr !== 'Fuera' ? parseFechaHora(`${y}-${m}-${d}`, regresoStr) : null;
-    n[idx][curso].push({alumno, salida: salidaDate, regreso: regresoDate});
+    const salida = parseFechaHora(`${y}-${m}-${d}`, salidaStr);
+    const regreso = regresoStr && regresoStr !== 'Fuera' ? parseFechaHora(`${y}-${m}-${d}`, regresoStr) : null;
+    if (salida) n[idx][curso].push({alumno, salida, regreso});
   }
   return n;
 }
 
 function parseFechaHora(fechaISO, horaStr) {
-  // horaStr formato HH:MM:SS
   if (!horaStr || horaStr === 'Fuera') return null;
   const [h,m,s] = horaStr.split(':').map(Number);
   const d = new Date(fechaISO);
