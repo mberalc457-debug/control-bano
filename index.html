@@ -243,7 +243,7 @@
 
 <script>
 const PASSWORD = '0000';
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxbfQ-EHckkXqwSfTKqTrPAHse9bOCRIYlhgE19RPtq4byO8INvCLIPZYEY3iBGzjMJ/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw31qkx9ADK3F7dLQEHVQPCsS2ZAlrqCzSv36jVmclCTBBdyjDLac3rJAoS0w5_X3tq/exec';
 
 const HORAS = [
   {label:'1ª',rango:'08:30-09:30'},
@@ -353,7 +353,7 @@ function forzarSync() { mostrarToast('🔄 Actualizando…'); cargarDatos(false)
 
 // ── SERIALIZAR ───────────────────────────────────────
 function serializar() {
-  const fecha = new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const fecha = new Date().toISOString().slice(0,10); // YYYY-MM-DD
   const rows = [['Fecha','horaIdx','Hora','Franja','Curso','Alumno/a','SalidaISO','RegresoISO','Duración (min)','Estado']];
   HORAS.forEach((h,i) => {
     if (h.recreo) return;
@@ -378,19 +378,24 @@ function deserializar(rows) {
   const n = {};
   HORAS.forEach((_,i) => n[i] = {});
   if (!rows || rows.length <= 1) return n;
-  const hoy = new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const hoy = new Date().toISOString().slice(0,10);
   for (let i = 1; i < rows.length; i++) {
-    const r = rows[i].map(String);
-    const fecha = r[0], hi = r[1], curso = r[4], alumno = r[5];
-    const salidaISO = r[6], regresoISO = r[7];
-    if (!fecha || !hi || !curso || !alumno || !salidaISO) continue;
-    if (fecha !== hoy) continue;
-    const idx = parseInt(hi);
+    const r = rows[i];
+    const fechaRaw = String(r[0]);
+    const hi = r[1];
+    const curso = String(r[4]);
+    const alumno = String(r[5]);
+    const salidaISO = String(r[6]);
+    const regresoISO = String(r[7]);
+    if (!fechaRaw || hi === undefined || !curso || !alumno || !salidaISO) continue;
+    // fecha puede venir como ISO completo o solo YYYY-MM-DD
+    if (fechaRaw.slice(0,10) !== hoy) continue;
+    const idx = typeof hi === 'number' ? hi : parseInt(hi);
     if (isNaN(idx) || idx < 0 || idx >= HORAS.length) continue;
     if (!n[idx][curso]) n[idx][curso] = [];
     const salida = new Date(salidaISO);
-    const regreso = regresoISO && regresoISO !== '' ? new Date(regresoISO) : null;
-    if (!isNaN(salida)) n[idx][curso].push({alumno, salida, regreso});
+    const regreso = regresoISO && regresoISO !== '' && regresoISO !== 'undefined' ? new Date(regresoISO) : null;
+    if (!isNaN(salida.getTime())) n[idx][curso].push({alumno, salida, regreso});
   }
   return n;
 }
